@@ -6,24 +6,18 @@
 /*   By: ivanderw <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:13:19 by ivanderw          #+#    #+#             */
-/*   Updated: 2023/04/25 21:46:19 by ivanderw         ###   ########.fr       */
+/*   Updated: 2023/04/26 20:46:39 by ivanderw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sources/libft/libft.h"
 #include "includes/minitalk.h"
 
-
-void	print_byte(int *byte)
+char *get_timestamp(void)
 {
-	int i;
-
-	i = 0;
-	while(i < 8)
-	{
-		ft_putchar(byte[i] + '0');
-		i++;
-	}
+	time_t t;      
+	time(&t);
+	return (ft_substr(ctime(&t), 4, 15));
 }
 
 unsigned char byte_to_char(int arr[])
@@ -39,17 +33,25 @@ unsigned char byte_to_char(int arr[])
 	return (c);
 }
 
-
 static void	sig_handle(int sig, siginfo_t *info, void *context)
 {
 	(void)context;
-	static int				i;
-	static pid_t			client_pid = 0;
-	int	byte[8];
-
-	if (sig == SIGUSR1)
+	(void)info;
+	static int	i;
+	static int 	start;
+	int			byte[8];
+	const char* green_text = GREEN_COLOR "SERVER" RESET_COLOR;
+	const char* yellow_text = YELLOW_COLOR "CLIENT" RESET_COLOR;
+	
+	if (start == 0 && (sig == SIGUSR1 || sig == SIGUSR2))
+	{
+		ft_printf("\n[");	
+		write(STDOUT_FILENO, green_text, ft_strlen(green_text));
+		ft_printf("][%s]: ", get_timestamp());
+	}
+		if (sig == SIGUSR1)
 		byte[i] = 1;
-    else if (sig == SIGUSR2)
+	else if (sig == SIGUSR2)
 		byte[i] = 0;
 	i++;	
 	if (i % 8 == 0)
@@ -57,34 +59,43 @@ static void	sig_handle(int sig, siginfo_t *info, void *context)
 		if(byte_to_char(byte) == 255)
 		{
 			ft_printf("\n");
-			kill(client_pid = info->si_pid, SIGUSR1);
-			kill(client_pid = info->si_pid, SIGUSR2);
-			client_pid = 0;
+			kill(info->si_pid, SIGUSR2);
+			start = 0;
+			i = 0;
 		}
 		else
 		{
+			if (start == 7)
+			{
+				ft_printf("<");
+				write(STDOUT_FILENO, yellow_text, ft_strlen(green_text));
+				ft_printf(">: ");
+			}
 			ft_printf("%c", byte_to_char(byte));
-			i = 0;
+			kill(info->si_pid, SIGUSR1);
 		}
+		i = 0;
 	}
+	start++;
 }
 
 int	main(void)
 {
 	struct sigaction	s_sigaction;
-	time_t t;   // not a primitive datatype
-    time(&t);
+	const char* green_text = GREEN_COLOR "SERVER" RESET_COLOR;
+	time_t t;	
+	time(&t);
 
-
-	//printf("day: %s\n", ft_substr(ctime(&t), 4, 16));
-	ft_printf("[SERVER: %s]:", ft_substr(ctime(&t), 4, 12));
- 	ft_printf("[PID: %d]\n", getpid());
+	ft_printf("[");
+	write(STDOUT_FILENO, green_text, ft_strlen(green_text));
+	ft_printf("][%s]: ", get_timestamp());
+ 	ft_printf("<PID> = %d", getpid());
 	s_sigaction.sa_sigaction = sig_handle;
 	s_sigaction.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &s_sigaction, 0);
 	sigaction(SIGUSR2, &s_sigaction, 0);
+	sigemptyset(&s_sigaction.sa_mask);
 	while (1)
 		pause();
-	return (0);
 }
 

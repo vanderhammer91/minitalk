@@ -6,7 +6,7 @@
 /*   By: ivanderw <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/22 15:59:14 by ivanderw          #+#    #+#             */
-/*   Updated: 2023/04/25 18:49:05 by ivanderw         ###   ########.fr       */
+/*   Updated: 2023/04/26 20:41:49 by ivanderw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 # include <stdlib.h>
 # include <stdarg.h>
 # include <time.h>
-# define GREEN "\033[1:32m"
-# define RED "\033[1:31m"
-
+#define RED_COLOR   "\x1b[31m"
+#define YELLOW_COLOR "\x1b[33m"
+#define GREEN_COLOR  "\x1b[32m"
+#define RESET_COLOR "\x1b[0m"
 #endif
