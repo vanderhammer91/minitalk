@@ -1,23 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_printf_printdecimal_length.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ivanderw <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/25 18:24:29 by ivanderw          #+#    #+#             */
-/*   Updated: 2023/04/26 21:54:00 by ivanderw         ###   ########.fr       */
+/*   Created: 2023/04/06 15:36:24 by ivanderw          #+#    #+#             */
+/*   Updated: 2023/04/26 22:08:26 by ivanderw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
 
-int	ft_strlen(const char *s)
+int	ft_printf_printdecimal_length(int n)
 {
-	int	count;
+	int	length;
 
-	count = 0;
-	while (s[count])
-		count++;
-	return (count);
+	length = 1;
+	if (n == INT_MIN)
+	{
+		ft_putstr("-2147483648");
+		return (11);
+	}
+	if (n < 0)
+	{
+		ft_putchar('-');
+		n = -n;
+		length += ft_printf_printdecimal_length(n);
+	}
+	else if (n == 0)
+		ft_putchar('0');
+	else if (n >= 10)
+	{
+		length += ft_printf_printdecimal_length(n / 10);
+		ft_putchar(n % 10 + '0');
+	}
+	else
+		ft_putchar(n % 10 + '0');
+	return (length);
 }

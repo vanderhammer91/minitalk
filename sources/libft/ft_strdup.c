@@ -6,7 +6,7 @@
 /*   By: ivanderw <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 18:55:28 by ivanderw          #+#    #+#             */
-/*   Updated: 2023/04/25 18:55:40 by ivanderw         ###   ########.fr       */
+/*   Updated: 2023/04/26 21:54:13 by ivanderw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
@@ -28,4 +28,3 @@ char	*ft_strdup(char *src)
 	output[i] = '\0';
 	return (output);
 }
-

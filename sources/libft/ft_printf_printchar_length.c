@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_printf_printchar_length.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ivanderw <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/25 18:24:29 by ivanderw          #+#    #+#             */
-/*   Updated: 2023/04/26 21:54:00 by ivanderw         ###   ########.fr       */
+/*   Created: 2023/04/06 15:41:46 by ivanderw          #+#    #+#             */
+/*   Updated: 2023/04/26 22:02:45 by ivanderw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
 
-int	ft_strlen(const char *s)
+int	ft_printf_printchar_length(char n)
 {
-	int	count;
-
-	count = 0;
-	while (s[count])
-		count++;
-	return (count);
+	if (write(1, &n, 1) < 0)
+		return (-1);
+	return (1);
 }

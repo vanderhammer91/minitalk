@@ -6,7 +6,7 @@
 /*   By: ivanderw <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:19:01 by ivanderw          #+#    #+#             */
-/*   Updated: 2023/04/24 19:38:17 by ivanderw         ###   ########.fr       */
+/*   Updated: 2023/04/26 21:59:20 by ivanderw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
@@ -17,17 +17,17 @@ int	get_output_length(va_list args, const char mychar)
 
 	length = 0;
 	if (mychar == 'c')
-		length += ft_printf_get_printchar_length(va_arg(args, int));
+		length += ft_printf_printchar_length(va_arg(args, int));
 	else if (mychar == 's')
-		length += ft_printf_get_printstr_length(va_arg(args, char *));
+		length += ft_printf_printstr_length(va_arg(args, char *));
 	else if (mychar == 'd' || mychar == 'i')
-		length += ft_printf_get_printdecimal_length(va_arg(args, int));
+		length += ft_printf_printdecimal_length(va_arg(args, int));
 	else if (mychar == 'X' || mychar == 'x')
-		length += ft_printf_get_printhex_length(va_arg(args, unsigned int), mychar);
+		length += ft_printf_printhex_length(va_arg(args, unsigned int), mychar);
 	else if (mychar == 'u')
-		length += ft_printf_get_printunsignedint_length(va_arg(args, unsigned int));
+		length += ft_printf_printunsigned_length(va_arg(args, unsigned int));
 	else if (mychar == 'p')
-		length += ft_printf_get_printaddress_length(va_arg(args, unsigned long long));
+		length += ft_printf_printadd_length(va_arg(args, unsigned long long));
 	else if (mychar == '%')
 	{
 		length++;
@@ -53,22 +53,9 @@ int	ft_printf(const char *inputstr, ...)
 			i++;
 		}
 		else
-			output_length += ft_printf_get_printchar_length(inputstr[i]);
+			output_length += ft_printf_printchar_length(inputstr[i]);
 		i++;
 	}
 	va_end(args);
 	return (output_length);
 }
-
-/*
-#ifdef _MAIN_
-int	main(void)
-{
-	int	result = ft_printf("mresult:%c\n", '0');
-	//printf("printf: %x\n", -10);
-	int cresult = printf("cresult:%c\n", '0');
-	printf("m:%d c:%d",result, cresult);
-	return (0);
-}
-#endif
-*/

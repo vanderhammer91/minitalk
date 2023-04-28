@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_printf_printunsigned_length.c                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ivanderw <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/25 18:24:29 by ivanderw          #+#    #+#             */
-/*   Updated: 2023/04/26 21:54:00 by ivanderw         ###   ########.fr       */
+/*   Created: 2023/04/06 15:24:49 by ivanderw          #+#    #+#             */
+/*   Updated: 2023/04/26 22:03:09 by ivanderw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
 
-int	ft_strlen(const char *s)
+int	ft_printf_printunsigned_length(unsigned int n)
 {
-	int	count;
+	int		print_length;	
 
-	count = 0;
-	while (s[count])
-		count++;
-	return (count);
+	print_length = 0;
+	if (n >= 10)
+		print_length += ft_printf_printunsigned_length(n / 10);
+	print_length += ft_printf_printchar_length(n % 10 + '0');
+	return (print_length);
 }

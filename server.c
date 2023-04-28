@@ -6,90 +6,64 @@
 /*   By: ivanderw <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:13:19 by ivanderw          #+#    #+#             */
-/*   Updated: 2023/04/26 20:46:39 by ivanderw         ###   ########.fr       */
+/*   Updated: 2023/04/28 13:35:32 by ivanderw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sources/libft/libft.h"
 #include "includes/minitalk.h"
 
-char *get_timestamp(void)
+unsigned char	byte_to_char(int arr[])
 {
-	time_t t;      
-	time(&t);
-	return (ft_substr(ctime(&t), 4, 15));
-}
+	unsigned char	byte;
+	int				i;
+	char			c;
 
-unsigned char byte_to_char(int arr[])
-{
-	unsigned char byte = 0;
-	int				i = 0;
+	byte = 0;
+	i = 0;
 	while (i < 8)
 	{
 		byte |= (arr[i] << (7 - i));
 		i++;
 	}
-	char c = (char) byte;
+	c = (char) byte;
 	return (c);
 }
 
 static void	sig_handle(int sig, siginfo_t *info, void *context)
 {
-	(void)context;
-	(void)info;
 	static int	i;
-	static int 	start;
 	int			byte[8];
-	const char* green_text = GREEN_COLOR "SERVER" RESET_COLOR;
-	const char* yellow_text = YELLOW_COLOR "CLIENT" RESET_COLOR;
-	
-	if (start == 0 && (sig == SIGUSR1 || sig == SIGUSR2))
-	{
-		ft_printf("\n[");	
-		write(STDOUT_FILENO, green_text, ft_strlen(green_text));
-		ft_printf("][%s]: ", get_timestamp());
-	}
-		if (sig == SIGUSR1)
+
+	(void) info;
+	(void) context;
+	if (sig == SIGUSR1)
 		byte[i] = 1;
 	else if (sig == SIGUSR2)
 		byte[i] = 0;
-	i++;	
+	i++;
 	if (i % 8 == 0)
 	{
-		if(byte_to_char(byte) == 255)
-		{
-			ft_printf("\n");
-			kill(info->si_pid, SIGUSR2);
-			start = 0;
-			i = 0;
-		}
-		else
-		{
-			if (start == 7)
-			{
-				ft_printf("<");
-				write(STDOUT_FILENO, yellow_text, ft_strlen(green_text));
-				ft_printf(">: ");
-			}
-			ft_printf("%c", byte_to_char(byte));
-			kill(info->si_pid, SIGUSR1);
-		}
+		ft_printf("%c", byte_to_char(byte));
 		i = 0;
 	}
-	start++;
 }
 
 int	main(void)
 {
 	struct sigaction	s_sigaction;
-	const char* green_text = GREEN_COLOR "SERVER" RESET_COLOR;
-	time_t t;	
-	time(&t);
+	const char			*server_text;
+	const char			*pid_text;
+	time_t				t;
 
+	time(&t);
+	server_text = GREEN "SERVER" RESET_COLOUR;
+	pid_text = GREEN "PID" RESET_COLOUR;
 	ft_printf("[");
-	write(STDOUT_FILENO, green_text, ft_strlen(green_text));
-	ft_printf("][%s]: ", get_timestamp());
- 	ft_printf("<PID> = %d", getpid());
+	write(STDOUT_FILENO, server_text, ft_strlen(server_text));
+	ft_printf("]: <");
+	write(STDOUT_FILENO, pid_text, ft_strlen(pid_text));
+	ft_printf("> = %d", getpid());
 	s_sigaction.sa_sigaction = sig_handle;
 	s_sigaction.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &s_sigaction, 0);
@@ -98,4 +72,3 @@ int	main(void)
 	while (1)
 		pause();
 }
-
